@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="shortcut icon" href="../favicon.png" type="image/png"/>
+    <!-- CSS -->
+    <link rel="stylesheet" href="../data/assets/mdui/css/mdui.min.css"/>
+    <link rel="stylesheet" href="../data/assets/mdui/css/md2.css"/>
+    <link rel="stylesheet" href="../data/assets/m.css"/>
+    <title>Cdm's Tool</title>
+    <style>
+    html, body {
+      height: 100%;
+    }
+    
+    .mdui-tab-indicator {
+      border-radius: 2px 2px 0 0;
+      max-width:40%;
+      margin-left:20px;
+      / * margin-left:4.5%; */
+    }
+    
+    .mdui-dialog {
+      z-index:7000;
+    }
+    </style>
+  </head>
+  <body class="mdui-drawer-body-left">
+    
+    <div style="z-index:6000;" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide">
+      <div class="mdui-toolbar cdm-bg">
+        <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#left-drawer'}">
+        <i class="mdui-icon material-icons">menu</i>
+        </a>
+        <a href="javascript:;" class="mdui-typo-title">WebADB工具</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <a href="javascript:LigDaq();" mdui-tooltip="{content: '切换主题'}" class="mdui-btn mdui-btn-icon">
+        <i id="ibq" class="mdui-icon material-icons"></i>
+        </a>
+        <a href="javascript:;" mdui-tooltip="{content: '更多'}" class="mdui-btn mdui-btn-icon" mdui-menu="{target: '#a-menu'}">
+        <i class="mdui-icon material-icons">more_vert</i>
+        </a> 
+        <ul class="mdui-menu" id="a-menu">
+          <li class="mdui-menu-item">
+          <a href="javascript:;" class="mdui-ripple">
+          <i class="mdui-menu-item-icon mdui-icon material-icons">search</i>搜索工具
+          </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="mdui-tab cdm-bg" mdui-tab>
+        <a href="#tab1" class="mdui-ripple mdui-ripple-white">总览</a>
+        <a href="#tab2" class="mdui-ripple mdui-ripple-white">控制台</a>
+      </div>
+    </div>
+    
+    <div class="mdui-drawer" id="left-drawer" style="padding-top:0">
+      <div style="height:100px;width:100%;"></div>
+      a
+    </div>
+    
+    
+    
+    
+    <div>
+      <div style="height:100px;width:100%;"></div>
+      
+      <div class="mdui-panel" mdui-panel>
+        <div class="mdui-panel-item cdm-shadow">
+          <div class="mdui-panel-item-header">
+            <div class="mdui-panel-item-title">我的设备</div>
+            <div class="mdui-panel-item-summary" id="device_name">未连接</div>
+            <i class="mdui-panel-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+          </div>
+          <div class="mdui-panel-item-body">
+            <div class="mdui-panel-item-actions">
+              <button id="device_btn_a" onclick="connect()" class="mdui-btn-raised mdui-btn mdui-ripple">OTG连接</button>
+              <button id="device_btn_b" onclick="disconnect()" disabled class="mdui-btn mdui-ripple" mdui-panel-item-close>断开连接</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="tab1">
+        
+        
+
+        
+        
+      </div>
+      <div style="padding:10px;height:100%;" id="tab2">
+        
+        <div class="mdui-typo mdui-card">
+          <pre style="max-height:500px;line-height:1.2;"><code style="line-height:1.2;" id="shellScreen"> _    _      _      ___ ____________ 
+| |  | |    | |    / _ \|  _  \ ___ \
+| |  | | ___| |__ / /_\ \ | | | |_/ /
+| |/\| |/ _ \ '_ \|  _  | | | | ___ \
+\  /\  /  __/ |_) | | | | |/ /| |_/ /
+ \/  \/ \___|_.__/\_| |_/___/ \____/ 
+</code></pre>
+          <div style="width:95%;margin-top:-22px;"  class="mdui-center">
+            <div style="float:left;width:88%;" class="mdui-textfield">
+              <textarea id="shell_input" class="mdui-textfield-input" type="text" placeholder="shell..."></textarea>
+            </div>
+            <button onclick="exec_shell(document.getElementById('shell_input').value)" style="float:left;min-width:12%;width:12%;padding:0;margin-top:15px;" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">
+              <i class="mdui-center mdui-icon material-icons">chevron_right</i>
+            </button>
+          </div>
+        </div>
+        
+        
+      </div>
+    </div>
+    
+  </body>
+  <!-- MDUI JavaScript -->
+  <script src="../data/assets/mdui/js/mdui.min.js"></script>
+  <script src="../data/assets/m.js"></script>
+  <script src="../data/assets/lib/webadb.js"></script>
+  <script>
+  var adb;
+  var webusb;
+  
+  log("请连接设备...");
+  
+  function log(str){
+    document.getElementById("shellScreen").innerHTML = document.getElementById("shellScreen").innerHTML+'\n'+str;
+  }
+  
+  function clear(){
+    document.getElementById("shellScreen").innerHTML = ` _    _      _      ___ ____________ 
+| |  | |    | |    / _ \|  _  \ ___ \
+| |  | | ___| |__ / /_\ \ | | | |_/ /
+| |/\| |/ _ \ '_ \|  _  | | | | ___ \
+\  /\  /  __/ |_) | | | | |/ /| |_/ /
+ \/  \/ \___|_.__/\_| |_/___/ \____/ `;
+  }
+  
+  let init = async () => {
+    if(!navigator.usb) {
+      log("您的浏览器不支持 webusb 功能, 请使用最新版本 Chrome 浏览器");
+      mdui.alert("您的浏览器不支持 webusb 功能, 请使用最新版本 Chrome 浏览器");
+      return;
+    }
+    clear();
+    try {
+      webusb = await Adb.open("WebUSB");
+    } catch(error) {
+      if (error.message) {
+        if(error.message.indexOf('No device') != -1) { // 未选中设备
+          return;
+        }else if(error.message.indexOf('was disconnected') != -1) {
+          log('无法连接到此设备, 请尝试重新连接');
+          mdui.alert('无法连接到此设备, 请尝试重新连接');
+        }
+      }
+      log(error);
+    }
+  };
+
+  let connect = async () => {
+    await init();
+    if(!webusb) {
+      return;
+    }
+    if (webusb.isAdb()) {
+      try {
+        adb = null;
+        adb = await webusb.connectAdb("host::web1n", () => {
+          log('请在你的 ' + webusb.device.productName + ' 设备上允许 ADB 调试');
+          mdui.alert('请在你的 ' + webusb.device.productName + ' 设备上允许 ADB 调试');
+        });
+        
+        if (adb != null) {
+          let name = webusb.device.productName + '.';
+          
+          log('已成功连接到 '+name);
+          document.getElementById("device_name").innerHTML = name;
+          document.getElementById("device_btn_a").disabled = true;
+          document.getElementById("device_btn_b").disabled = false;
+          document.getElementById("device_btn_a").classList.remove("mdui-btn-raised");
+          document.getElementById("device_btn_b").classList.add("mdui-btn-raised");
+          console.log(webusb.device);
+        }
+      } catch(error) {
+        log(error);
+        adb = null;
+      }
+    }
+  };
+  
+  let disconnect = async () => {
+    if(!webusb){
+      return;
+    }
+    webusb.close();
+    
+    document.getElementById("device_name").innerHTML = '未连接';
+    document.getElementById("device_btn_b").disabled = true;
+    document.getElementById("device_btn_a").disabled = false;
+    document.getElementById("device_btn_b").classList.remove("mdui-btn-raised");
+    document.getElementById("device_btn_a").classList.add("mdui-btn-raised");
+  };
+  
+  let exec_shell = async (command) => {
+    if (!adb) {
+      mdui.alert("未连接到设备");
+      return;
+    }
+    if(!command) {
+      return;
+    }
+    clear();
+    
+    log('-> '+ command );
+    try {
+      let shell = await adb.shell(command);
+      let r = await shell.receive();
+      while (r.data != null) {
+        let decoder = new TextDecoder('utf-8');
+        let txt = decoder.decode(r.data);
+      
+        log(txt);
+        r = await shell.receive();
+      }
+      
+      shell.close();
+    } catch (error) {
+      log(error);
+    }
+  };
+  
+  
+  </script>
+</html>
