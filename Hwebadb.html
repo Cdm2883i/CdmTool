@@ -96,13 +96,7 @@
       <div style="padding:10px;height:100%;" id="tab2">
         
         <div class="mdui-typo mdui-card">
-          <pre style="max-height:500px;line-height:1.2;"><code style="line-height:1.2;" id="shellScreen"> _    _      _      ___ ____________ 
-| |  | |    | |    / _ \|  _  \ ___ \
-| |  | | ___| |__ / /_\ \ | | | |_/ /
-| |/\| |/ _ \ '_ \|  _  | | | | ___ \
-\  /\  /  __/ |_) | | | | |/ /| |_/ /
- \/  \/ \___|_.__/\_| |_/___/ \____/ 
-</code></pre>
+          <pre style="max-height:500px;line-height:1.2;"><code style="line-height:1.2;" id="shellScreen"></code></pre>
           <div style="width:95%;margin-top:-22px;"  class="mdui-center">
             <div style="float:left;width:88%;" class="mdui-textfield">
               <textarea id="shell_input" class="mdui-textfield-input" type="text" placeholder="shell..."></textarea>
@@ -117,6 +111,14 @@
       </div>
     </div>
     
+<pre id="webadb"> _    _      _      ___ ____________ 
+| |  | |    | |    / _ \|  _  \ ___ \
+| |  | | ___| |__ / /_\ \ | | | |_/ /
+| |/\| |/ _ \ '_ \|  _  | | | | ___ \
+\  /\  /  __/ |_) | | | | |/ /| |_/ /
+ \/  \/ \___|_.__/\_| |_/___/ \____/ 
+</pre>
+    
   </body>
   <!-- MDUI JavaScript -->
   <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
@@ -126,6 +128,7 @@
   var adb;
   var webusb;
   
+  clear();
   log("请连接设备...");
   
   function log(str){
@@ -133,12 +136,7 @@
   }
   
   function clear(){
-    document.getElementById("shellScreen").innerHTML = ` _    _      _      ___ ____________ 
-| |  | |    | |    / _ \|  _  \ ___ \
-| |  | | ___| |__ / /_\ \ | | | |_/ /
-| |/\| |/ _ \ '_ \|  _  | | | | ___ \
-\  /\  /  __/ |_) | | | | |/ /| |_/ /
- \/  \/ \___|_.__/\_| |_/___/ \____/ `;
+    document.getElementById("shellScreen").innerHTML = document.getElementById("webadb").innerHTML;
   }
   
   let init = async () => {
