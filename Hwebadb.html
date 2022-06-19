@@ -27,6 +27,41 @@
     .mdui-dialog {
       z-index:7000;
     }
+    
+    .package_name {
+      display: none;
+    }
+    
+    .mdui-container,
+    .mdui-container-fluid {
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      margin-right: auto;
+      margin-left: auto;
+      padding-right: 8px;
+      padding-left: 8px;
+    }
+    .mdui-container::after,
+    .mdui-container-fluid::after {
+      display: table;
+      clear: both;
+      content: '';
+    }
+    .mdui-container {
+      width: 96%;
+      max-width: 1280px;
+    }
+    @media (min-width: 600px) {
+      .mdui-container {
+        width: 94%;
+      }
+    }
+    @media (min-width: 1024px) {
+      .mdui-container {
+        width: 92%;
+      }
+    }
+    
     </style>
   </head>
   <body class="mdui-drawer-body-left">
@@ -79,24 +114,165 @@
           </div>
           <div class="mdui-panel-item-body">
             <div class="mdui-panel-item-actions">
-              <button id="device_btn_a" onclick="connect()" class="mdui-btn-raised mdui-btn mdui-ripple">OTG连接</button>
+              <button id="device_btn_a" onclick="connect()" class="mdui-btn-raised mdui-btn mdui-ripple">
+                <i class="mdui-icon mdui-icon-left material-icons">usb</i> OTG连接
+              </button>
               <button id="device_btn_b" onclick="disconnect()" disabled class="mdui-btn mdui-ripple" mdui-panel-item-close>断开连接</button>
             </div>
           </div>
         </div>
       </div>
       
-      <div id="tab1">
+      <div class="mdui-container" id="tab1">
         
-        
+        <div class="mdui-panel mdui-panel-popout" mdui-panel>
+          
+          <div class="cdm-shadow mdui-panel-item mdui-panel-item-open">
+            <div class="mdui-panel-item-header">快捷操作</div>
+            <div class="mdui-panel-item-body">
+              
+              <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-a-1" onclick="exec_shell('reboot')">重启</button>
+              <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-a-1" onclick="exec_shell('reboot recovery')">重启到Recovery</button>
+              <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-a-1">Button</button>
+              <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-a-1">Button</button>
+              <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-a-1">Button</button>
+              <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-a-1">Button</button>
+              <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-a-1">Button</button>
+              <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-a-1">Button</button>
+              
+            </div>
+          </div>
+          
+          <div class="cdm-shadow mdui-panel-item mdui-panel-item-open">
+            <div class="mdui-panel-item-header">文件传输</div>
+            <div class="mdui-panel-item-body">
+              
+              <div class="mdui-panel mdui-panel-popout" mdui-panel="{accordion: true}">
+                <div class="mdui-panel-item mdui-card mdui-panel-item-open">
+                  <div class="mdui-panel-item-header">
+                    <div>传输到连接设备</div>
+                    <i class="mdui-panel-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+                  </div>
+                  <div class="mdui-panel-item-body">
+                    
+                    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">
+                      <i class="mdui-icon mdui-icon-right material-icons">insert_drive_file</i> 请选择文件
+                    </button>
+                    
+                    <div class="mdui-textfield">
+                      <i class="mdui-icon material-icons">sd_storage</i>
+                      <textarea class="mdui-textfield-input" type="text" placeholder="传输到的路径..." required></textarea>
+                    </div>
+                    
+                    <div style="margin-top:10px;margin-bottom:10px;" class="mdui-divider"></div>
+                    
+                    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">
+                      <i class="mdui-icon mdui-icon-right material-icons">file_upload</i> 开始传输
+                    </button>
+                    
+                  </div>
+                </div>
+                
+                <div class="mdui-panel-item mdui-card">
+                  <div class="mdui-panel-item-header">
+                    <div>从连接设备下载文件</div>
+                    <i class="mdui-panel-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+                  </div>
+                  <div class="mdui-panel-item-body">
+                    
+                    <div class="mdui-textfield">
+                      <i class="mdui-icon material-icons">sd_storage</i>
+                      <textarea class="mdui-textfield-input" type="text" placeholder="被下载的文件..." required></textarea>
+                    </div>
+                    
+                    <div style="margin-top:10px;margin-bottom:10px;" class="mdui-divider"></div>
+                    
+                    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">
+                      <i class="mdui-icon mdui-icon-right material-icons">file_download</i> 开始下载
+                    </button>
+                    
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          
+          <div class="cdm-shadow mdui-panel-item mdui-panel-item-open">
+            <div class="mdui-panel-item-header">应用管理</div>
+            <div class="mdui-panel-item-body">
+              
+              <div class="mdui-list">
+                <li class="mdui-subheader">Apk安装</li>
+                <div>
+                  <button class="mdui-btn mdui-color-theme-accent mdui-ripple">
+                    <i class="mdui-icon mdui-icon-right material-icons">android</i> 请选择文件
+                  </button>
+                  <button class="mdui-btn mdui-ripple mdui-btn-raised">
+                    <i class="mdui-icon mdui-icon-right material-icons">archive</i> 安装
+                  </button>
+                </div>
+                <li class="mdui-subheader">应用列表</li>
+                
+                <button onclick="app('refresh')"; class="mdui-btn-block mdui-btn mdui-color-theme-accent mdui-ripple">
+                  <i class="mdui-icon mdui-icon-left material-icons">refresh</i> 刷新列表
+                </button>
+                
+                <div class="mdui-table-fluid mdui-typo">
+                  <table class="mdui-table mdui-table-selectable mdui-table-hoverable">
+                    <thead>
+                      <tr>
+                        <th mdui-tooltip="{content: '长按列表项查看更多信息'}">应用名称</th>
+                        <th class="mdui-table-col-numeric" mdui-tooltip="{content: '多选时执行操作将会应用到所有选择的列表项'}">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody id="apps_list">
+                      <tr class="mdui-table-row-selected">
+                        <td mdui-tooltip="{content: '包名: aaa.xxx.bbb'}">Frozen yogurt</td>
+                        <td>
+                          <a href="javascript:apps('am force-stop','aaa.xxx.bbb');">强行停止</a>
+                          <a href="javascript:apps('pm uninstall','aaa.xxx.bbb');">卸载</a>
+                        </td>
+                        <td class="package_name">aaa.xxx.bbb</td>
+                      </tr>
+                      <tr>
+                        <td>Ice cream sandwich</td>
+                        <td>
+                          <a href="javascript:apps('am force-stop','aaa.xxx.ccc');">强行停止</a>
+                          <a href="javascript:apps('pm uninstall','aaa.xxx.ccc');">卸载</a>
+                        </td>
+                        <td class="package_name">aaa.xxx.ccc</td>
+                      </tr>
+                      <tr>
+                        <td>Eclair</td>
+                        <td>
+                          <a href="javascript:apps('am force-stop','aaa.xxx.ooo');">强行停止</a>
+                          <a href="javascript:apps('pm uninstall','aaa.xxx.ooo');">卸载</a>
+                        </td>
+                        <td class="package_name">aaa.xxx.ooo</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                
+                
+                
+              </div>
+              
+              
+            </div>
+          </div>
+          
+        </div>
 
         
         
       </div>
-      <div style="padding:10px;height:100%;" id="tab2">
+      <div class="mdui-container" id="tab2">
         
         <div class="mdui-typo mdui-card">
-          <pre style="max-height:500px;line-height:1.2;"><code style="line-height:1.2;" id="shellScreen"></code></pre>
+          <pre style="max-height:420px;line-height:1.2;"><code style="line-height:1.2;" id="shellScreen"></code></pre>
           <div style="width:95%;margin-top:-22px;"  class="mdui-center">
             <div style="float:left;width:88%;" class="mdui-textfield">
               <textarea id="shell_input" class="mdui-textfield-input" type="text" placeholder="shell..."></textarea>
@@ -111,7 +287,7 @@
       </div>
     </div>
     
-<pre id="webadb"> _    _      _      ___ ____________ 
+<pre id="webadb" style="display:none;"> _    _      _      ___ ____________ 
 | |  | |    | |    / _ \|  _  \ ___ \
 | |  | | ___| |__ / /_\ \ | | | |_/ /
 | |/\| |/ _ \ '_ \|  _  | | | | ___ \
@@ -139,7 +315,7 @@
     document.getElementById("shellScreen").innerHTML = document.getElementById("webadb").innerHTML;
   }
   
-  let init = async () => {
+  async function init(){
     if(!navigator.usb) {
       log("您的浏览器不支持 webusb 功能, 请使用最新版本 Chrome 浏览器");
       mdui.alert("您的浏览器不支持 webusb 功能, 请使用最新版本 Chrome 浏览器");
@@ -161,7 +337,7 @@
     }
   };
 
-  let connect = async () => {
+  async function connect(){
     await init();
     if(!webusb) {
       return;
@@ -192,7 +368,7 @@
     }
   };
   
-  let disconnect = async () => {
+  async function disconnect(){
     if(!webusb){
       return;
     }
@@ -205,7 +381,7 @@
     document.getElementById("device_btn_a").classList.add("mdui-btn-raised");
   };
   
-  let exec_shell = async (command) => {
+  async function exec_shell(command){
     if (!adb) {
       mdui.alert("未连接到设备");
       return;
@@ -213,9 +389,9 @@
     if(!command) {
       return;
     }
-    clear();
+    //clear();
     
-    log('-> '+ command );
+    log('-> ' + command );
     try {
       let shell = await adb.shell(command);
       let r = await shell.receive();
@@ -223,7 +399,7 @@
         let decoder = new TextDecoder('utf-8');
         let txt = decoder.decode(r.data);
       
-        log(txt);
+        log(txt + "\n");
         r = await shell.receive();
       }
       
@@ -232,6 +408,93 @@
       log(error);
     }
   };
+  
+  async function app(how){
+    if (!adb) {
+      mdui.alert("未连接到设备");
+      return;
+    }
+    
+    if (how=="refresh") {
+      let packages = "";
+      try {
+        let shell = await adb.shell("pm list packages -3");
+        let r = await shell.receive();
+        while (r.data != null) {
+          let decoder = new TextDecoder('utf-8');
+          packageContent += decoder.decode(r.data);
+          r = await shell.receive();
+        }
+        shell.close();
+      } catch(error) {
+        log(error);
+      }
+      let apps_listnr = "";
+      let arr = packageContent.split("\n");
+      for(var i = 0, len = arr.length; i < len; i++){
+        let line = arr[i];
+        if(line.indexOf("package:") != 0){
+          //这一行不是
+          continue;
+        }
+        let packageName = line.substring(8);
+        
+        let appName;
+        let appDesc;
+        
+        await mdui.$.ajax({
+          method: 'GET',
+          url: 'https://www.coolapk.com/apk/'+packageName,
+          success: function (data) {
+            appName = data.match(new RegExp("<title>([\\s\\S]*)\\([.*]<\\/title>"))[1];
+            appDesc = data.match(new RegExp("<meta name=\"description\" content=\"([\\s\\S]*)\"\\/>"))[1];
+          },
+          error: function (data) {
+            appName = packageName;
+            appDesc = packageName;
+          }
+        });
+        
+        let app_nr = "";
+        
+        app_nr += '<tr class="mdui-table-row-selected">';
+        app_nr += '  <td mdui-tooltip="{content: \'包名: '+packageName+'<br>描述: '+appDesc+'\'}">'+appName+'</td>';
+        app_nr += '  <td>';
+        app_nr += '    <a href="javascript:apps(\'am force-stop\',\''+packageName+'\');">强行停止</a>';
+        app_nr += '    <a href="javascript:apps(\'pm uninstall\',\''+packageName+'\');">卸载</a>';
+        app_nr += '  </td>';
+        app_nr += '  <td class="package_name">'+packageName+'</td>';
+        app_nr += '</tr>';
+        
+        apps_listnr += app_nr;
+      }
+      
+      document.getElementById("apps_list").innerHTML = apps_listnr;
+    }
+  }
+  
+  function apps(how, package){
+    let content;
+    if (how=="am force-stop") {
+      //强行停止
+      content = "确认要强行停止？";
+    } else if (how=="pm uninstall") {
+      //卸载
+      content = "确认要卸载？";
+    }
+    mdui.confirm(content, function(){
+      if (mdui.$('.mdui-table-row-selected .package_name').length != 0) {
+        mdui.$('.mdui-table-row-selected .package_name').each(function(index, element) {
+          //log(this.innerHTML);
+          exec_shell(how+" "+this.innerHTML);
+          //log(how+" "+this.innerHTML);
+        });
+      } else {
+        exec_shell(how+" "+package);
+        //log(how+" "+package);
+      }
+    });
+  }
   
   
   </script>
