@@ -155,18 +155,19 @@
                   </div>
                   <div class="mdui-panel-item-body">
                     
-                    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">
+                    <button id="fileName" onclick="document.getElementById('file').click();" class="mdui-btn mdui-color-theme-accent mdui-ripple">
                       <i class="mdui-icon mdui-icon-right material-icons">insert_drive_file</i> 请选择文件
                     </button>
+                    <input type="file" id="file" style="display: none"/>
                     
                     <div class="mdui-textfield">
                       <i class="mdui-icon material-icons">sd_storage</i>
-                      <textarea class="mdui-textfield-input" type="text" placeholder="传输到的路径..." required></textarea>
+                      <textarea id="remotefilePath" class="mdui-textfield-input" type="text" placeholder="传输到的路径(如:/sdcard/a.png)..." required></textarea>
                     </div>
                     
                     <div style="margin-top:10px;margin-bottom:10px;" class="mdui-divider"></div>
                     
-                    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">
+                    <button onclick="pushFile()" class="mdui-btn mdui-color-theme-accent mdui-ripple">
                       <i class="mdui-icon mdui-icon-right material-icons">file_upload</i> 开始传输
                     </button>
                     
@@ -206,7 +207,7 @@
                 <li class="mdui-subheader">Apk安装</li>
                 <div>
                   <button id="apkFileName" onclick="document.getElementById('apkFile').click();" class="mdui-btn mdui-color-theme-accent mdui-ripple">
-                    <i class="mdui-icon mdui-icon-right material-icons">android</i> 请选择文件
+                    <i class="mdui-icon mdui-icon-right material-icons">android</i> 请选择apk
                   </button>
                   <input type="file" accept="application/vnd.android.package-archive" id="apkFile" style="display: none"/>
                   <button onclick="installApkFile()" class="mdui-btn mdui-ripple mdui-btn-raised">
@@ -288,7 +289,15 @@
     if(document.getElementById("apkFile").files.length > 0) {
       document.getElementById("apkFileName").innerHTML = '<i class="mdui-icon mdui-icon-right material-icons">android</i> '+document.getElementById("apkFile").files[0].name;
     } else {
-      document.getElementById("apkFileName").innerHTML = '<i class="mdui-icon mdui-icon-right material-icons">android</i> 请选择文件';
+      document.getElementById("apkFileName").innerHTML = '<i class="mdui-icon mdui-icon-right material-icons">android</i> 请选择apk';
+    }
+  });
+  
+  mdui.$('#file').on('change', function (e) {
+    if(document.getElementById("file").files.length > 0) {
+      document.getElementById("fileName").innerHTML = '<i class="mdui-icon mdui-icon-right material-icons">insert_drive_file</i> '+document.getElementById("file").files[0].name;
+    } else {
+      document.getElementById("fileName").innerHTML = '<i class="mdui-icon mdui-icon-right material-icons">insert_drive_file</i> 请选择文件';
     }
   });
   
@@ -470,27 +479,43 @@
     });
   }
   
-  let push = async (filePath, blob) => {	
+  async function push(filePath, blob){	
     if (!adb) {
       mdui.alert("未连接到设备");
       return;
     }
     
     try {
-      log("Pushing " + filePath + "...");
+      log("\n正在传输文件 " + filePath + " ...");
       
       sync = await adb.sync();
       await sync.push(blob, filePath, 0644, null);
       await sync.quit();
       sync = null;
       
-      log(filePath + " pushed.");
+      log(filePath + " 传输完成.\n");
     }catch(error) {
       log(error);
     }
   }
-
-  let installApkFile = async() => {
+  
+  let pushFile = async() => {
+    if (!adb) {
+      mdui.alert("未连接到设备");
+      return;
+    }
+    
+    let filePath = document.getElementById("#remotefilePath").value;
+    let file = document.getElementById("file").files[0];;
+    if(!filePath || !file){
+      mdui.alert("文件或传输地址为空");
+      return;
+    }
+    
+    push(filePath, file);
+  }
+  
+  async function installApkFile(){
     if (!adb) {
       mdui.alert("未连接到设备");
       return;
@@ -507,7 +532,21 @@
     
     await push(filePath, file);
     await exec_shell(shell);
-    mdui.alert("安装完成");
+    mdui.dialog({
+      title: '安装完成',
+      content: '是否删除安装的apk文件？',
+      buttons: [
+        {
+          text: '取消'
+        },
+        {
+          text: '删除',
+          onClick: function(inst){
+            await exec_shell('rm '+filePath);
+          }
+        }
+      ]
+    });
   }
   </script>
 </html>
