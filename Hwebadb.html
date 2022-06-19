@@ -205,10 +205,11 @@
               <div class="mdui-list">
                 <li class="mdui-subheader">Apk安装</li>
                 <div>
-                  <button class="mdui-btn mdui-color-theme-accent mdui-ripple">
+                  <button id="apkFileName" onclick="document.getElementById('apkFile').click();" class="mdui-btn mdui-color-theme-accent mdui-ripple">
                     <i class="mdui-icon mdui-icon-right material-icons">android</i> 请选择文件
                   </button>
-                  <button class="mdui-btn mdui-ripple mdui-btn-raised">
+                  <input type="file" accept="application/vnd.android.package-archive" id="apkFile" style="display: none"/>
+                  <button onclick="installApkFile()" class="mdui-btn mdui-ripple mdui-btn-raised">
                     <i class="mdui-icon mdui-icon-right material-icons">archive</i> 安装
                   </button>
                 </div>
@@ -223,7 +224,7 @@
                     <thead>
                       <tr>
                         <th mdui-tooltip="{content: '点击查询是什么应用'}">应用包名</th>
-                        <th class="mdui-table-col-numeric" mdui-tooltip="{content: '多选时执行操作将会应用到所有选择的列表项'}">操作</th>
+                        <th class="mdui-table-col-numeric" mdui-tooltip="{content: '多选时执行操作将会应用到所有选择的列表项'}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作</th>
                       </tr>
                     </thead>
                     <tbody id="apps_list">
@@ -282,6 +283,14 @@
   
   var adb;
   var webusb;
+  
+  mdui.$('#apkFile').on('change', function (e) {
+    if(document.getElementById("apkFile").files.length > 0) {
+      document.getElementById("apkFileName").innerHTML = '<i class="mdui-icon mdui-icon-right material-icons">android</i> '+document.getElementById("apkFile").files[0].name;
+    } else {
+      document.getElementById("apkFileName").innerHTML = '<i class="mdui-icon mdui-icon-right material-icons">android</i> 请选择文件';
+    }
+  });
   
   clear();
   log("请连接设备...");
@@ -420,7 +429,7 @@
         
         let app_nr = "";
         
-        app_nr += '<tr class="mdui-table-row-selected">';
+        app_nr += '<tr>';
         app_nr += '  <td onclick="window.open(\'https://cn.bing.com/search?q='+packageName+'\')">'+packageName+'</td>';
         app_nr += '  <td>';
         app_nr += '    <a href="javascript:apps(\'am force-stop\',\''+packageName+'\');">强行停止</a>';
@@ -461,6 +470,44 @@
     });
   }
   
-  
+  let push = async (filePath, blob) => {	
+    if (!adb) {
+      mdui.alert("未连接到设备");
+      return;
+    }
+    
+    try {
+      log("Pushing " + filePath + "...");
+      
+      sync = await adb.sync();
+      await sync.push(blob, filePath, 0644, null);
+      await sync.quit();
+      sync = null;
+      
+      log(filePath + " pushed.");
+    }catch(error) {
+      log(error);
+    }
+  }
+
+  let installApkFile = async() => {
+    if (!adb) {
+      mdui.alert("未连接到设备");
+      return;
+    }
+    let filePath = "/data/local/tmp/" + (new Date()).valueOf() + ".apk";
+    let shell = "pm install -r " + filePath;
+    console.log(filePath);
+    
+    let file = document.getElementById("apkFile").files[0];
+    if(!file){
+      mdui.alert("没有选择 apk 文件");
+      return;
+    }
+    
+    await push(filePath, file);
+    await exec_shell(shell);
+    mdui.alert("安装完成");
+  }
   </script>
 </html>
