@@ -299,7 +299,8 @@
   <!-- MDUI JavaScript -->
   <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
   <script src="data/m.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/webadb/webadb.js@master/webadb.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/webadb/webadb.js@master/webadb.js"></script>  
+  <script src="http://eruda.liriliri.io/eruda.min.js"></script>
   <script>
   var adb;
   var webusb;
@@ -422,7 +423,7 @@
         let r = await shell.receive();
         while (r.data != null) {
           let decoder = new TextDecoder('utf-8');
-          packageContent += decoder.decode(r.data);
+          package += decoder.decode(r.data);
           r = await shell.receive();
         }
         shell.close();
@@ -430,7 +431,7 @@
         log(error);
       }
       let apps_listnr = "";
-      let arr = packageContent.split("\n");
+      let arr = package.split("\n");
       for(var i = 0, len = arr.length; i < len; i++){
         let line = arr[i];
         if(line.indexOf("package:") != 0){
@@ -496,6 +497,6 @@
     });
   }
   
-  
+  eruda.init();
   </script>
 </html>
