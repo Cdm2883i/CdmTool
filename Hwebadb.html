@@ -76,16 +76,6 @@
         <a href="javascript:LigDaq();" mdui-tooltip="{content: '切换主题'}" class="mdui-btn mdui-btn-icon">
         <i id="ibq" class="mdui-icon material-icons"></i>
         </a>
-        <a href="javascript:;" mdui-tooltip="{content: '更多'}" class="mdui-btn mdui-btn-icon" mdui-menu="{target: '#a-menu'}">
-        <i class="mdui-icon material-icons">more_vert</i>
-        </a> 
-        <ul class="mdui-menu" id="a-menu">
-          <li class="mdui-menu-item">
-          <a href="javascript:;" class="mdui-ripple">
-          <i class="mdui-menu-item-icon mdui-icon material-icons">search</i>搜索工具
-          </a>
-          </li>
-        </ul>
       </div>
       
       <div class="mdui-tab cdm-bg" mdui-tab>
@@ -96,7 +86,14 @@
     
     <div class="mdui-drawer" id="left-drawer" style="padding-top:0">
       <div style="height:100px;width:100%;"></div>
-      a
+      
+      <div style="margin:10px;" class="mdui-list mdui-card">
+        <a href="http://81.71.38.231/tool" class="mdui-list-item mdui-ripple">
+          <i class="mdui-text-color-theme-accent mdui-list-item-icon mdui-icon material-icons">arrow_back</i>
+          <div class="mdui-list-item-content">返回到主站</div>
+        </a>
+      </div>
+      
     </div>
     
     
@@ -216,7 +213,7 @@
                 </div>
                 <li class="mdui-subheader">应用列表</li>
                 
-                <button onclick="app('refresh')"; class="mdui-btn-block mdui-btn mdui-color-theme-accent mdui-ripple">
+                <button onclick="app('refresh')" class="mdui-btn-block mdui-btn mdui-color-theme-accent mdui-ripple">
                   <i class="mdui-icon mdui-icon-left material-icons">refresh</i> 刷新列表
                 </button>
                 
@@ -278,9 +275,9 @@
   <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
   <script src="data/m.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/webadb/webadb.js@master/webadb.js"></script>  
-  <script src="https://eruda.liriliri.io/eruda.min.js"></script>
+  <!-- <script src="https://eruda.liriliri.io/eruda.min.js"></script> -->
   <script>
-  eruda.init();
+  //eruda.init();
   
   var adb;
   var webusb;
@@ -315,7 +312,14 @@
   async function init(){
     if(!navigator.usb) {
       log("您的浏览器不支持 webusb 功能, 请使用最新版本 Chrome 浏览器");
-      mdui.alert("您的浏览器不支持 webusb 功能, 请使用最新版本 Chrome 浏览器");
+      mdui.alert(`您的浏览器不支持 webusb 功能, 请使用最新版本 Chrome 浏览器
+<div style="margin:10px 10px 0 10px;" class="mdui-list mdui-card">
+  <a href="https://www.google.cn/intl/zh-CN/chrome/" class="mdui-list-item mdui-ripple">
+    <i class="mdui-text-color-theme-accent mdui-list-item-icon mdui-icon" style="background:url(https://www.google.cn/chrome/static/images/chrome-logo.svg);background-size:25px;"></i>
+    <div class="mdui-list-item-content">Google Chrome</div>
+  </a>
+</div>
+`);
       return;
     }
     clear();
@@ -348,9 +352,10 @@
         });
         
         if (adb != null) {
-          let name = webusb.device.productName + '.';
+          let name = webusb.device.productName;
           
           log('已成功连接到 '+name);
+          app('refresh')
           document.getElementById("device_name").innerHTML = name;
           document.getElementById("device_btn_a").disabled = true;
           document.getElementById("device_btn_b").disabled = false;
@@ -416,6 +421,7 @@
       let packages = "";
       try {
         let shell = await adb.shell("pm list packages -3");
+        log('-> pm list packages -3');
         let r = await shell.receive();
         while (r.data != null) {
           let decoder = new TextDecoder('utf-8');
@@ -426,6 +432,7 @@
       } catch(error) {
         log(error);
       }
+      log(packages + "\n");
       let apps_listnr = "";
       let arr = packages.split("\n");
       for(var i = 0, len = arr.length; i < len; i++){
@@ -542,7 +549,7 @@
         {
           text: '删除',
           onClick: function(inst){
-            await exec_shell('rm '+filePath);
+            exec_shell('rm '+filePath);
           }
         }
       ]
