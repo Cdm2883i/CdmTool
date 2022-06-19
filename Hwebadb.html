@@ -301,6 +301,7 @@
   <script src="data/m.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/webadb/webadb.js@master/webadb.js"></script>  
   <script src="https://eruda.liriliri.io/eruda.min.js"></script>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
   <script>
   eruda.init();
   
@@ -445,9 +446,9 @@
         let appName;
         let appDesc;
         
-        await mdui.$.ajax({
-          method: 'GET',
+        await $.ajax({
           url: 'https://www.coolapk.com/apk/'+packageName,
+          dataType:"jsonp",
           success: function (data) {
             appName = data.match(new RegExp("<title>([\\s\\S]*)\\([.*]<\\/title>"))[1];
             appDesc = data.match(new RegExp("<meta name=\"description\" content=\"([\\s\\S]*)\"\\/>"))[1];
