@@ -423,7 +423,7 @@
         let r = await shell.receive();
         while (r.data != null) {
           let decoder = new TextDecoder('utf-8');
-          package += decoder.decode(r.data);
+          packages += decoder.decode(r.data);
           r = await shell.receive();
         }
         shell.close();
@@ -431,7 +431,7 @@
         log(error);
       }
       let apps_listnr = "";
-      let arr = package.split("\n");
+      let arr = packages.split("\n");
       for(var i = 0, len = arr.length; i < len; i++){
         let line = arr[i];
         if(line.indexOf("package:") != 0){
