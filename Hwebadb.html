@@ -222,7 +222,7 @@
                   <table class="mdui-table mdui-table-selectable mdui-table-hoverable">
                     <thead>
                       <tr>
-                        <th mdui-tooltip="{content: '长按列表项查看更多信息'}">应用名称</th>
+                        <th mdui-tooltip="{content: '点击查询是什么应用'}">应用包名</th>
                         <th class="mdui-table-col-numeric" mdui-tooltip="{content: '多选时执行操作将会应用到所有选择的列表项'}">操作</th>
                       </tr>
                     </thead>
@@ -301,7 +301,6 @@
   <script src="data/m.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/webadb/webadb.js@master/webadb.js"></script>  
   <script src="https://eruda.liriliri.io/eruda.min.js"></script>
-  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
   <script>
   eruda.init();
   
@@ -443,26 +442,10 @@
         }
         let packageName = line.substring(8);
         
-        let appName;
-        let appDesc;
-        
-        await $.ajax({
-          url: 'https://www.coolapk.com/apk/'+packageName,
-          dataType:"jsonp",
-          success: function (data) {
-            appName = data.match(new RegExp("<title>([\\s\\S]*)\\([.*]<\\/title>"))[1];
-            appDesc = data.match(new RegExp("<meta name=\"description\" content=\"([\\s\\S]*)\"\\/>"))[1];
-          },
-          error: function (data) {
-            appName = packageName;
-            appDesc = packageName;
-          }
-        });
-        
         let app_nr = "";
         
         app_nr += '<tr class="mdui-table-row-selected">';
-        app_nr += '  <td mdui-tooltip="{content: \'包名: '+packageName+'<br>描述: '+appDesc+'\'}">'+appName+'</td>';
+        app_nr += '  <td onclick="window.open(\'https://cn.bing.com/search?q='+packageName+'\')">'+packageName+'</td>';
         app_nr += '  <td>';
         app_nr += '    <a href="javascript:apps(\'am force-stop\',\''+packageName+'\');">强行停止</a>';
         app_nr += '    <a href="javascript:apps(\'pm uninstall\',\''+packageName+'\');">卸载</a>';
