@@ -227,30 +227,6 @@
                       </tr>
                     </thead>
                     <tbody id="apps_list">
-                      <tr class="mdui-table-row-selected">
-                        <td mdui-tooltip="{content: '包名: aaa.xxx.bbb'}">Frozen yogurt</td>
-                        <td>
-                          <a href="javascript:apps('am force-stop','aaa.xxx.bbb');">强行停止</a>
-                          <a href="javascript:apps('pm uninstall','aaa.xxx.bbb');">卸载</a>
-                        </td>
-                        <td class="package_name">aaa.xxx.bbb</td>
-                      </tr>
-                      <tr>
-                        <td>Ice cream sandwich</td>
-                        <td>
-                          <a href="javascript:apps('am force-stop','aaa.xxx.ccc');">强行停止</a>
-                          <a href="javascript:apps('pm uninstall','aaa.xxx.ccc');">卸载</a>
-                        </td>
-                        <td class="package_name">aaa.xxx.ccc</td>
-                      </tr>
-                      <tr>
-                        <td>Eclair</td>
-                        <td>
-                          <a href="javascript:apps('am force-stop','aaa.xxx.ooo');">强行停止</a>
-                          <a href="javascript:apps('pm uninstall','aaa.xxx.ooo');">卸载</a>
-                        </td>
-                        <td class="package_name">aaa.xxx.ooo</td>
-                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -457,6 +433,8 @@
       }
       
       document.getElementById("apps_list").innerHTML = apps_listnr;
+      mdui.mutation();
+      mdui.updateTables();
     }
   }
   
